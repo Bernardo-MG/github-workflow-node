@@ -42,16 +42,6 @@ on:
         required: true
 
 jobs:
-  setup:
-    name: Preparation
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Register SSH host
-      uses: bernardo-mg/ssh-host-register-action@v1
-      with:
-        host: ${{ inputs.host }}
-
   deploy:
     name: Deployment
     needs: setup

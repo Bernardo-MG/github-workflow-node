@@ -12,17 +12,17 @@ Use these files as any reusable workflow:
 
 ```
 jobs:
-  tests:
-    name: Tests with JDK ${{ matrix.jdk }}
-    strategy:
-      matrix:
-        jdk: [ 11, 17 ]
-    uses: Bernardo-MG/github-workflow-maven/.github/workflows/testing.yml@v1
+  deploy:
+    uses: Bernardo-MG/github-workflow-node/.github/workflows/deploy_ssh.yml@v1
     with:
-      jdk: ${{ matrix.jdk }}
+      branch: develop
+    secrets:
+      host: ${{ secrets.DEPLOY_HOST }}
+      port: ${{ secrets.DEPLOY_PORT }}
+      path: ${{ secrets.DEPLOY_PATH }}
+      username: ${{ secrets.DEPLOY_USER }}
+      password: ${{ secrets.DEPLOY_PASSWORD }}
 ```
-
-For an actual usage of these files check the [Library Maven Archetype][archetype].
 
 ## Collaborate
 
@@ -43,7 +43,6 @@ If you wish to fork or modify the code, visit the [GitHub project page][scm], wh
 
 The project has been released under version 2.0 of the [Apache License][license].
 
-[archetype]: https://github.com/Bernardo-MG/library-maven-archetype
 [issues]: https://github.com/Bernardo-MG/github-workflow-maven/issues
 [license]: https://www.apache.org/licenses/LICENSE-2.0
 [scm]: https://github.com/Bernardo-MG/github-workflow-maven

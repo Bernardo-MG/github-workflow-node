@@ -44,7 +44,6 @@ on:
 jobs:
   deploy:
     name: Deployment
-    needs: setup
     environment: ${{ inputs.environment }}
     concurrency:
       group: deploy-ssh-${{ github.ref }}

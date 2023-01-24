@@ -68,4 +68,4 @@ jobs:
     - name: Move to build folder
       run: cd ${{ inputs.build-folder }}
     - name: Deploy build folder
-      run: sshpass -p ${{ secrets.password }} scp -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+ssh-dss -P ${{ secrets.port }} -r ./* ${{ secrets.username }}'@'${{ secrets.host }}':'${{ secrets.path }};
+      run: sshpass -p ${{ secrets.password }} scp -oStrictHostKeyChecking=no -oHostKeyAlgorithms=+ssh-dss -P ${{ secrets.port }} -r ./* ${{ secrets.username }}'@'${{ secrets.host }}':'${{ secrets.path }};

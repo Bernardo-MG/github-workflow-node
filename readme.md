@@ -16,6 +16,7 @@ jobs:
     uses: Bernardo-MG/github-workflow-node/.github/workflows/deploy_ssh.yml@v1
     with:
       branch: develop
+      environment: deployment_site
     secrets:
       host: ${{ secrets.DEPLOY_HOST }}
       port: ${{ secrets.DEPLOY_PORT }}

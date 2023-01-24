@@ -12,10 +12,6 @@ on:
         description: 'Branch on which the site will be deployed'
         required: true
         type: string
-      host:
-        description: 'Host where the site will be deployed'
-        required: true
-        type: string
       node:
         description: 'Node version to use'
         default: 16.x

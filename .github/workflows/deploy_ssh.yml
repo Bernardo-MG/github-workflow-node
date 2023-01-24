@@ -1,0 +1,86 @@
+name: SSH deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Github environment to use'
+        default: 'deployment_ssh'
+        required: false
+        type: string
+      branch:
+        description: 'Branch on which the site will be deployed'
+        required: true
+        type: string
+      host:
+        description: 'Host where the site will be deployed'
+        required: true
+        type: string
+      node:
+        description: 'Node version to use'
+        default: 16.x
+        type: string
+      build-command:
+        description: 'npm command used to buil the project'
+        default: build
+        type: string
+      build-folder:
+        description: 'Folder containing the output from building the project'
+        default: src
+        type: string
+    secrets:
+      host:
+        description: 'Host to deploy the site to'
+        required: true
+      port:
+        description: 'Host port for deployment'
+        required: true
+      path:
+        description: 'Path inside the host to deploy to'
+        required: true
+      username:
+        description: 'Username for deploying'
+        required: true
+      password:
+        description: 'Password for deploying'
+        required: true
+
+jobs:
+  setup:
+    name: Preparation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Register SSH host
+      uses: bernardo-mg/ssh-host-register-action@v1
+      with:
+        host: ${{ inputs.host }}
+
+  deploy:
+    name: Deployment
+    needs: setup
+    environment: ${{ inputs.environment }}
+    concurrency:
+      group: deploy-ssh-${{ github.ref }}
+      cancel-in-progress: true
+    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check-out
+      uses: actions/checkout@v3
+      with:
+        persist-credentials: false
+    - name: Set up Node.js ${{ inputs.node }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node }}
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: Build project
+      run: npm run ${{ inputs.build-command }}
+    - name: Move to build folder
+      run: cd ${{ inputs.build-folder }}
+    - name: Deploy build folder
+      run: sshpass -p ${{ secrets.password }} scp -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+ssh-dss -P ${{ secrets.DEPLOY_DOCS_PORT }} -r ./* ${{ secrets.username }}'@'${{ secrets.host }}':'${{ secrets.path }};

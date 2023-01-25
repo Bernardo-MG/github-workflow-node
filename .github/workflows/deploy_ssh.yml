@@ -42,14 +42,6 @@ on:
         required: true
 
 jobs:
-  setup:
-    name: Preparation
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Install Chromedriver
-      run: sudo apt-get install chromium-chromedriver
-
   deploy:
     name: Deployment
     environment: ${{ inputs.environment }}

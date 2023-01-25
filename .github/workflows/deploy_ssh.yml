@@ -46,6 +46,8 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
+    - name: Check-out
+      uses: actions/checkout@v3
     - name: Set up Node.js ${{ inputs.node }}
       uses: actions/setup-node@v3
       with:
@@ -65,8 +67,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check-out
-      uses: actions/checkout@v3
     - name: Build project
       run: npm run ${{ inputs.build-command }}
     - name: Move to build folder

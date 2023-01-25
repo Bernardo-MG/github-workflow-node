@@ -42,9 +42,12 @@ on:
         required: true
 
 jobs:
-  setup:
-    name: Setup
+  deploy:
+    name: Deployment
+    environment: ${{ inputs.environment }}
+    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
+
     steps:
     - name: Check-out
       uses: actions/checkout@v3
@@ -55,18 +58,6 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm ci
-
-  deploy:
-    name: Deployment
-    needs: setup
-    environment: ${{ inputs.environment }}
-    concurrency:
-      group: deploy-ssh-${{ github.ref }}
-      cancel-in-progress: true
-    if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Build project
       run: npm run ${{ inputs.build-command }}
     - name: Move to build folder

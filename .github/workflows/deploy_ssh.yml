@@ -45,6 +45,9 @@ jobs:
   deploy:
     name: Deployment
     environment: ${{ inputs.environment }}
+    concurrency:
+      group: deploy-ssh-${{ github.ref }}
+      cancel-in-progress: true
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
 

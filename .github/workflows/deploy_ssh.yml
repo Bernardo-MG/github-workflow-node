@@ -45,6 +45,9 @@ jobs:
   deploy:
     name: Deployment
     environment: ${{ inputs.environment }}
+    concurrency:
+      group: deploy-ssh-${{ github.ref }}
+      cancel-in-progress: true
     if: ${{ github.ref == format('refs/heads/{0}', inputs.branch) }}
     runs-on: ubuntu-latest
 
@@ -59,7 +62,7 @@ jobs:
         node-version: ${{ inputs.node }}
         cache: 'npm'
     - name: Install dependencies
-      run: npm install
+      run: npm ci
     - name: Build project
       run: npm run ${{ inputs.build-command }}
     - name: Move to build folder

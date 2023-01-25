@@ -43,14 +43,20 @@ on:
 
 jobs:
   setup:
-    name: Deployment
+    name: Setup
     runs-on: ubuntu-latest
     steps:
+    - name: Set up Node.js ${{ inputs.node }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node }}
+        cache: 'npm'
     - name: Install dependencies
       run: npm ci
 
   deploy:
     name: Deployment
+    needs: setup
     environment: ${{ inputs.environment }}
     concurrency:
       group: deploy-ssh-${{ github.ref }}
@@ -61,11 +67,6 @@ jobs:
     steps:
     - name: Check-out
       uses: actions/checkout@v3
-    - name: Set up Node.js ${{ inputs.node }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ inputs.node }}
-        cache: 'npm'
     - name: Build project
       run: npm run ${{ inputs.build-command }}
     - name: Move to build folder

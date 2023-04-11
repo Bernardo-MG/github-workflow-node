@@ -6,7 +6,6 @@ on:
       environment:
         description: 'Github environment to use'
         default: 'deployment_ssh'
-        required: false
         type: string
       branch:
         description: 'Branch on which the site will be deployed'

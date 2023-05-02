@@ -64,7 +64,6 @@ jobs:
       run: npm ci
     - name: Build project
       run: npm run ${{ inputs.build-command }}
-    - name: Move to build folder
-      run: cd ${{ inputs.build-folder }}
-    - name: Deploy build folder
-      run: sshpass -p ${{ secrets.password }} scp -oStrictHostKeyChecking=no -oHostKeyAlgorithms=+ssh-dss -P ${{ secrets.port }} -r ./* ${{ secrets.username }}'@'${{ secrets.host }}':'${{ secrets.path }};
+      run: |
+           cd ${{ inputs.build-folder }}
+           sshpass -p ${{ secrets.password }} scp -oStrictHostKeyChecking=no -oHostKeyAlgorithms=+ssh-dss -P ${{ secrets.port }} -r ./* ${{ secrets.username }}'@'${{ secrets.host }}':'${{ secrets.path }};
